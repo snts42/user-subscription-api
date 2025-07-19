@@ -13,14 +13,18 @@ class User(BaseModel):
     @classmethod
     def username_valid(cls, v):
         if not re.match("^[a-zA-Z0-9]+$", v):
-            raise ValueError("Username must be alphanumeric")
+            raise ValueError("Username must be alphanumeric, no spaces")
         return v
 
     @field_validator('password')
     @classmethod
     def password_valid(cls, v):
-        if len(v) < 8 or not re.search(r'[A-Z]', v) or not re.search(r'[0-9]', v):
-            raise ValueError("Password must be at least 8 chars, one uppercase, one number")
+        if len(v) < 8:
+            raise ValueError("Password must be at least 8 characters")
+        if not re.search(r'[A-Z]', v):
+            raise ValueError("Password must contain an uppercase letter")
+        if not re.search(r'[0-9]', v):
+            raise ValueError("Password must contain a number")
         return v
 
     @field_validator('credit_card')

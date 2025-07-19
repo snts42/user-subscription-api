@@ -15,15 +15,14 @@ A FastAPI-based RESTful API for managing user registrations and processing payme
 - Python 3.10+
 - FastAPI
 - Uvicorn
-- Pydantic v2
-- `pydantic[email]` (for email validation)
+- Pydantic v2 (with email validation support)
 - pytest
 
 ## Installation
 
 To install dependencies:
 
-`pip install fastapi uvicorn pydantic "pydantic[email]" pytest`
+`pip install -r requirements.txt`
 
 ## Running the Application
 
@@ -52,6 +51,8 @@ Request Body Example:
   "credit_card": "1234567812345678"
 }
 ```
+
+`credit_card` is optional.
 
 Response Codes:
 
@@ -93,18 +94,27 @@ Response Codes:
 
 ## Running Tests
 
-Run all tests using:
+Unit tests are provided using `pytest`. Run all tests using:
 
 `python -m pytest`
 
-Test cases cover:
+Tests cover:
 
-- Successful user registration
-- Invalid and missing fields
-- Underage user rejection
-- Duplicate usernames
-- Valid and invalid payment processing
-- Credit card filter logic
+- User Registration
+  - Successful registration
+  - Underage user rejection
+  - Duplicate username
+  - Missing or invalid fields (username, password, email, date of birth, credit card)
+
+- User Retrieval
+  - Fetch all users
+  - Filter by credit card (present or not present)
+  - Fallback behavior for unknown `creditCard` filter values
+
+- Payment Processing
+  - Successful payment with valid card and amount
+  - Payment with unregistered or invalid credit card
+  - Invalid payment amounts (not three digits)
 
 ## Notes
 

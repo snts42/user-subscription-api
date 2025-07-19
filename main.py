@@ -1,12 +1,11 @@
+from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
-from fastapi import FastAPI, Request
-from endpoints import user_router, payment_router
+from endpoints.routes import user_router, payment_router
 
 app = FastAPI(
     title="User Subscription API",
     description="API for user registration and payment handling",
-    version="1.0.0"
 )
 
 @app.exception_handler(RequestValidationError)
@@ -17,11 +16,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         if ctx and "error" in ctx and isinstance(ctx["error"], Exception):
             ctx["error"] = str(ctx["error"])
         clean_errors.append(err)
-
-    return JSONResponse(
-        status_code=400,
-        content={"detail": clean_errors},
-    )
+    return JSONResponse(status_code=400, content={"detail": clean_errors})
 
 app.include_router(user_router, prefix="/users", tags=["Users"])
 app.include_router(payment_router, prefix="/payments", tags=["Payments"])
